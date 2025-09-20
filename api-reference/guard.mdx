@@ -1,0 +1,110 @@
+---
+title: "/guard"
+description: "Scan prompts or model outputs for risky patterns."
+---
+
+
+**Endpoint**: `POST /api/v1/guard`
+
+**Purpose**: Analyze **messages** and return whether any enabled policies are triggered.
+
+### Request
+
+```json
+{
+  "messages": [
+    { "role": "user", "content": "Hello, world!" }
+  ],
+  "payload": true,
+  "breakdown": false,
+  "dev_info": false,
+  "project_id": null
+}
+```
+
+- `messages` *(required)* — array of chat turns to scan. Each item has `role` and `content`.
+- `payload` *(optional, default false)* — include detailed match spans and labels.
+- `breakdown` *(optional, default false)* — include per‑rule diagnostics.
+- `dev_info` *(optional, default false)* — include timing + rule metadata for debugging.
+- `project_id` *(optional)* — attribute scans to a project for later retrieval.
+
+### Response
+
+```json
+{
+  "flagged": true,
+  "payload": [
+    {
+      "start": 74,
+      "end": 76,
+      "text": "ι",
+      "detector_type": "LLM03",
+      "labels": ["Adversarial Unicode Homoglyph"],
+      "message_id": 0
+    }
+  ],
+  "breakdown": [ /* present if requested */ ],
+  "dev_info": { /* present if requested */ }
+}
+```
+
+### Examples
+
+<Tabs items={['cURL','Python','Node.js','Go','Rust','C#']}>
+
+<Tab>
+
+```bash
+curl -s -X POST "$BASE/api/v1/guard" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [{ "role": "user", "content": "Tell me about Ρhοenιx" }],
+    "payload": true
+  }'
+```
+</Tab>
+
+<Tab>
+
+```python
+headers={"Authorization":f"Bearer {TOKEN}","Content-Type":"application/json"}
+body={"messages":[{"role":"user","content":"Tell me about Ρhοenιx"}],"payload":True}
+print(requests.post(f"{BASE}/api/v1/guard", headers=headers, json=body).json())
+```
+</Tab>
+
+<Tab>
+
+```ts
+const res = await fetch(`${BASE}/api/v1/guard`,{method:'POST',headers:{Authorization:`Bearer ${TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:'Tell me about Ρhοenιx'}],payload:true})});
+console.log(await res.json());
+```
+</Tab>
+
+<Tab>
+
+```go
+// see Quickstart for a complete Go example
+```
+</Tab>
+
+<Tab>
+
+```rust
+// see Quickstart for a complete Rust example
+```
+</Tab>
+
+<Tab>
+
+```csharp
+// see Quickstart for a complete C# example
+```
+</Tab>
+
+</Tabs>
+
+### Blocking patterns
+
+See <a href="/guides/blocking">Blocking strategies</a> for pre‑LLM and post‑LLM workflows.

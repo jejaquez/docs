@@ -1,0 +1,19 @@
+---
+title: "Authentication"
+description: "Use Bearer tokens to call SageXAI APIs."
+---
+
+## Tokens
+
+SageXAI uses **Bearer tokens** for all API calls. Create a Personal Access Token in the dashboard and include it in your `Authorization` header:
+
+```http
+Authorization: Bearer <YOUR_TOKEN>
+```
+
+## Environments
+
+- **Local**: `http://sagexai.test/`
+- **Production**: `https://api.sagexai.com/` (replace with your deployment URL)
+
+Keep tokens secret. We recommend storing credentials in a secrets manager (e.g., AWS Secrets Manager) and injecting them at runtime.

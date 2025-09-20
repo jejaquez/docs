@@ -1,0 +1,39 @@
+---
+title: "/guard/results"
+description: "Retrieve historical scan results."
+---
+
+**Endpoint**: `GET /api/v1/guard/results`
+
+Use this to build dashboards and analytics. Results can be filtered by `project_id` or by a specific `scan_id` if your integration stores the ID returned by `/guard` (when enabled).
+
+### Query parameters
+
+- `project_id` *(optional)* — return scans for this project.
+- `scan_id` *(optional)* — return details for a specific scan (if available).
+- Pagination parameters *(optional)* — `page`, `per_page`.
+
+### Example
+
+```bash
+curl -s -X GET "$BASE/api/v1/guard/results?project_id=demo&per_page=25" \
+  -H "Authorization: Bearer $TOKEN" | jq
+```
+
+### Response shape (example)
+
+```json
+{
+  "data": [
+    {
+      "id": "scan_01HXXX...",
+      "created_at": "2025-09-20T16:10:00Z",
+      "flagged": true,
+      "summary": { "matches": 1, "detectors": ["LLM03"] }
+    }
+  ],
+  "meta": { "page": 1, "per_page": 25, "total": 1 }
+}
+```
+
+> Note: the exact fields can vary depending on your deployment's storage settings. At minimum, expect `flagged` and a timestamp per scan.

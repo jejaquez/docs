@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "SageXAI Docs",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -13,6 +13,14 @@
       {
         "tab": "Guides",
         "groups": [
+          {
+            "group": "SageXAI Guard",
+            "pages": [
+              "quickstart",
+              "guides/authentication",
+              "guides/blocking"
+            ]
+          },
           {
             "group": "Getting started",
             "pages": [
@@ -50,6 +58,13 @@
       {
         "tab": "API reference",
         "groups": [
+          {
+            "group": "Guard endpoints",
+            "pages": [
+              "api-reference/guard",
+              "api-reference/guard-results"
+            ]
+          },
           {
             "group": "API documentation",
             "pages": [
@@ -107,15 +122,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
