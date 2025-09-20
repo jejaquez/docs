@@ -3,38 +3,10 @@ title: "SageXAI — API-first AI Safety"
 description: "Documentation for SageXAI's /guard endpoint and usage examples."
 ---
 
-
 # Welcome to SageXAI
 
-SageXAI is an API‑first safety layer for LLMs. The **/guard** endpoint scans prompts and model outputs for risky patterns (e.g., jailbreak attempts, Unicode homoglyphs, data exfiltration cues) using our OWASP GenAI policy set.
+SageXAI is an API-first safety layer for LLMs. The **/guard** endpoint scans prompts and model outputs for risky patterns (e.g., jailbreak attempts, Unicode homoglyphs, data exfiltration cues) using our OWASP GenAI policy set.
 
-<Callout>
-This guide focuses on the features available today in the MVP: the **/guard** and **/guard/results** endpoints.
-</Callout>
-
-<Card
-  title="Quickstart: call /guard in 60 seconds"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Create a token, send your first scan, and interpret the response.
-</Card>
-
-<Card
-  title="API: /guard"
-  icon="command"
-  href="/api-reference/guard"
-  horizontal
->
-  Request/response schema with multi‑language examples.
-</Card>
-
-<Card
-  title="API: /guard/results"
-  icon="database"
-  href="/api-reference/guard-results"
-  horizontal
->
-  Retrieve historical scan results for dashboards and analytics.
-</Card>
+- **Quickstart**: Create a token, send your first scan, and interpret the response.
+- **API: /guard**: Request/response schema with examples.
+- **API: /guard/results**: Retrieve historical scan results.

@@ -16,8 +16,7 @@ Use this to build dashboards and analytics. Results can be filtered by `project_
 ### Example
 
 ```bash
-curl -s -X GET "$BASE/api/v1/guard/results?project_id=demo&per_page=25" \
-  -H "Authorization: Bearer $TOKEN" | jq
+curl -s -X GET "$BASE/api/v1/guard/results?project_id=demo&per_page=25"   -H "Authorization: Bearer $TOKEN" | jq
 ```
 
 ### Response shape (example)
