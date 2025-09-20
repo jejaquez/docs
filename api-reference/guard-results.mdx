@@ -29,11 +29,12 @@ Use this to build dashboards and analytics. Results can be filtered by `project_
 }
 ```
 
-### Examples
+### Multi-Language Examples
 
 <Tabs items={['Python','JavaScript','TypeScript','Java','C#','C++','PHP','Go','Rust','cURL']}>
 
 <Tab>
+<Tab title="Python">
 ```python
 import requests
 
@@ -49,6 +50,7 @@ print(r.status_code, r.json())
 </Tab>
 
 <Tab>
+<Tab title="JavaScript">
 ```js
 const BASE = "http://sagexai.test";
 const TOKEN = "<YOUR_TOKEN>";
@@ -62,6 +64,7 @@ console.log(res.status, await res.json());
 </Tab>
 
 <Tab>
+<Tab title="TypeScript">
 ```ts
 const BASE = "http://sagexai.test";
 const TOKEN = "<YOUR_TOKEN>";
@@ -75,6 +78,7 @@ console.log(res.status, await res.json());
 </Tab>
 
 <Tab>
+<Tab title="Java">
 ```java
 import java.net.http.*;
 import java.net.URI;
@@ -97,6 +101,7 @@ public class ResultsExample {
 </Tab>
 
 <Tab>
+<Tab title="C#">
 ```csharp
 using System;
 using System.Net.Http;
@@ -111,105 +116,6 @@ client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bear
 var resp = await client.GetAsync(url);
 Console.WriteLine((int)resp.StatusCode);
 Console.WriteLine(await resp.Content.ReadAsStringAsync());
-```
-</Tab>
-
-<Tab>
-```cpp
-#include <curl/curl.h>
-#include <iostream>
-
-int main() {
-  CURL* curl = curl_easy_init();
-  if(!curl) return 1;
-
-  const char* BASE = "http://sagexai.test";
-  const char* TOKEN = "<YOUR_TOKEN>";
-  std::string url = std::string(BASE) + "/api/v1/guard/results?project_id=demo&per_page=25";
-
-  struct curl_slist* headers = NULL;
-  headers = curl_slist_append(headers, ("Authorization: Bearer " + std::string(TOKEN)).c_str());
-
-  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-  CURLcode res = curl_easy_perform(curl);
-  if (res != CURLE_OK) std::cerr << "curl error: " << curl_easy_strerror(res) << "\n";
-
-  curl_slist_free_all(headers);
-  curl_easy_cleanup(curl);
-  return 0;
-}
-```
-</Tab>
-
-<Tab>
-```php
-<?php
-$BASE = "http://sagexai.test";
-$TOKEN = "<YOUR_TOKEN>";
-$url = "$BASE/api/v1/guard/results?project_id=demo&per_page=25";
-
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $TOKEN"]);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
-echo $code . PHP_EOL . $response;
-```
-</Tab>
-
-<Tab>
-```go
-package main
-
-import (
-  "fmt"
-  "net/http"
-  "time"
-)
-
-func main() {
-  base := "http://sagexai.test";
-  token := "<YOUR_TOKEN>";
-  url := base + "/api/v1/guard/results?project_id=demo&per_page=25";
-
-  req, _ := http.NewRequest("GET", url, nil);
-  req.Header.Set("Authorization", "Bearer "+token);
-
-  client := &http.Client{ Timeout: 15 * time.Second };
-  resp, err := client.Do(req);
-  if (err != nil) { panic(err) }
-  defer resp.Body.Close();
-
-  fmt.Println("Status:", resp.Status);
-}
-```
-</Tab>
-
-<Tab>
-```rust
-use reqwest::blocking::Client;
-
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let base = "http://sagexai.test";
-    let token = "<YOUR_TOKEN>";
-    let url = format!("{}/api/v1/guard/results?project_id=demo&per_page=25", base);
-    let res = Client::new()
-        .get(url)
-        .bearer_auth(token)
-        .send()?;
-    println!("Status: {}", res.status());
-    println!("{}", res.text()?);
-    Ok(())
-}
-```
-</Tab>
-
-<Tab>
-```bash
-curl -s -X GET "$BASE/api/v1/guard/results?project_id=demo&per_page=25"   -H "Authorization: Bearer $TOKEN"
 ```
 </Tab>
 
