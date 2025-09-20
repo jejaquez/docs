@@ -31,10 +31,8 @@ Use this to build dashboards and analytics. Results can be filtered by `project_
 
 ### Multi-Language Examples
 
-<Tabs items={['Python','JavaScript','TypeScript','Java','C#','C++','PHP','Go','Rust','cURL']}>
+#### Python 
 
-<Tab>
-<Tab title="Python">
 ```python
 import requests
 
@@ -47,10 +45,8 @@ r = requests.get(f"{BASE}/api/v1/guard/results", headers={
 }, params=params, timeout=30)
 print(r.status_code, r.json())
 ```
-</Tab>
+#### JavaScript
 
-<Tab>
-<Tab title="JavaScript">
 ```js
 const BASE = "http://sagexai.test";
 const TOKEN = "<YOUR_TOKEN>";
@@ -61,10 +57,8 @@ url.searchParams.set("per_page", "25");
 const res = await fetch(url, { headers: { "Authorization": `Bearer ${TOKEN}` } });
 console.log(res.status, await res.json());
 ```
-</Tab>
+#### TypeScript
 
-<Tab>
-<Tab title="TypeScript">
 ```ts
 const BASE = "http://sagexai.test";
 const TOKEN = "<YOUR_TOKEN>";
@@ -75,10 +69,9 @@ url.searchParams.set("per_page", "25");
 const res = await fetch(url, { headers: { "Authorization": `Bearer ${TOKEN}` } });
 console.log(res.status, await res.json());
 ```
-</Tab>
 
-<Tab>
-<Tab title="Java">
+#### Java
+
 ```java
 import java.net.http.*;
 import java.net.URI;
@@ -87,7 +80,7 @@ public class ResultsExample {
   public static void main(String[] args) throws Exception {
     String BASE = "http://sagexai.test";
     String TOKEN = "<YOUR_TOKEN>";
-    String url = BASE + "/api/v1/guard/results?project_id=demo&per_page=25";
+    String url = BASE + "/api/v1/guard/results";
     HttpClient client = HttpClient.newHttpClient();
     HttpRequest req = HttpRequest.newBuilder(URI.create(url))
       .header("Authorization", "Bearer " + TOKEN)
@@ -98,10 +91,9 @@ public class ResultsExample {
   }
 }
 ```
-</Tab>
 
-<Tab>
-<Tab title="C#">
+#### C#
+
 ```csharp
 using System;
 using System.Net.Http;
@@ -109,7 +101,7 @@ using System.Net.Http.Headers;
 
 var BASE = "http://sagexai.test";
 var TOKEN = "<YOUR_TOKEN>";
-var url = $"{BASE}/api/v1/guard/results?project_id=demo&per_page=25";
+var url = $"{BASE}/api/v1/guard/results";
 
 using var client = new HttpClient();
 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TOKEN);
@@ -117,6 +109,99 @@ var resp = await client.GetAsync(url);
 Console.WriteLine((int)resp.StatusCode);
 Console.WriteLine(await resp.Content.ReadAsStringAsync());
 ```
-</Tab>
 
-</Tabs>
+#### C++
+
+```cpp
+#include <curl/curl.h>
+#include <iostream>
+
+int main() {
+  CURL* curl = curl_easy_init();
+  if(!curl) return 1;
+
+  const char* BASE = "http://sagexai.test";
+  const char* TOKEN = "<YOUR_TOKEN>";
+  std::string url = std::string(BASE) + "/api/v1/guard/results";
+
+  struct curl_slist* headers = NULL;
+  headers = curl_slist_append(headers, ("Authorization: Bearer " + std::string(TOKEN)).c_str());
+
+  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+  CURLcode res = curl_easy_perform(curl);
+  if (res != CURLE_OK) std::cerr << "curl error: " << curl_easy_strerror(res) << "\n";
+
+  curl_slist_free_all(headers);
+  curl_easy_cleanup(curl);
+  return 0;
+}
+```
+
+#### PHP
+
+```php
+<?php
+$BASE = "http://sagexai.test";
+$TOKEN = "<YOUR_TOKEN>";
+$url = "$BASE/api/v1/guard/results";
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $TOKEN"]);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+echo $code . PHP_EOL . $response;
+```
+
+#### Go
+
+```go
+package main
+
+import (
+  "fmt"
+  "net/http"
+  "time"
+)
+
+func main() {
+  base := "http://sagexai.test";
+  token := "<YOUR_TOKEN>";
+  url := base + "/api/v1/guard/results";
+
+  req, _ := http.NewRequest("GET", url, nil);
+  req.Header.Set("Authorization", "Bearer "+token);
+
+  client := &http.Client{ Timeout: 15 * time.Second };
+  resp, err := client.Do(req);
+  if (err != nil) { panic(err) }
+  defer resp.Body.Close();
+
+  fmt.Println("Status:", resp.Status);
+}
+```
+
+#### Rust
+
+```rust
+use reqwest::blocking::Client;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let base = "http://sagexai.test";
+    let token = "<YOUR_TOKEN>";
+    let url = format!("{}/api/v1/guard/results", base);
+    let res = Client::new()
+        .get(url)
+        .bearer_auth(token)
+        .send()?;
+    println!("Status: {}", res.status());
+    println!("{}", res.text()?);
+    Ok(())
+}
+```
+
+
+

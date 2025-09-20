@@ -47,11 +47,10 @@ description: "Scan prompts or model outputs for risky patterns."
 }
 ```
 
-### Examples
+### Multi-Language Examples
 
-<Tabs items={['Python','JavaScript','TypeScript','Java','C#','.NET','C++','PHP','Go','Rust','cURL']}>
+#### Python 
 
-<Tab>
 ```python
 import requests
 
@@ -66,9 +65,9 @@ body = {
 resp = requests.post(f"{BASE}/api/v1/guard", headers=headers, json=body, timeout=30)
 print(resp.status_code, resp.json())
 ```
-</Tab>
 
-<Tab>
+#### JavaScript
+
 ```js
 const BASE = "http://sagexai.test";
 const TOKEN = "<YOUR_TOKEN>";
@@ -83,9 +82,9 @@ const res = await fetch(`${BASE}/api/v1/guard`, {
 });
 console.log(res.status, await res.json());
 ```
-</Tab>
 
-<Tab>
+#### TypeScript 
+
 ```ts
 const BASE = "http://sagexai.test";
 const TOKEN = "<YOUR_TOKEN>";
@@ -103,9 +102,9 @@ const res = await fetch(`${BASE}/api/v1/guard`, {
 });
 console.log(res.status, await res.json());
 ```
-</Tab>
 
-<Tab>
+#### Java 
+
 ```java
 import java.net.http.*;
 import java.net.URI;
@@ -130,9 +129,9 @@ public class GuardExample {
   }
 }
 ```
-</Tab>
 
-<Tab>
+#### C# 
+
 ```csharp
 using System;
 using System.Net.Http;
@@ -150,19 +149,9 @@ var resp = await client.PostAsync($"{BASE}/api/v1/guard", new StringContent(json
 Console.WriteLine((int)resp.StatusCode);
 Console.WriteLine(await resp.Content.ReadAsStringAsync());
 ```
-</Tab>
 
-<Tab>
-```csharp
-// .NET HttpClientFactory (DI)
-// services.AddHttpClient("sagexai", c => {
-//   c.BaseAddress = new Uri("http://sagexai.test");
-//   c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "<YOUR_TOKEN>");
-// });
-```
-</Tab>
+#### C++
 
-<Tab>
 ```cpp
 #include <curl/curl.h>
 #include <iostream>
@@ -194,9 +183,9 @@ int main() {
   return 0;
 }
 ```
-</Tab>
 
-<Tab>
+#### PHP 
+
 ```php
 <?php
 $BASE = "http://sagexai.test";
@@ -219,9 +208,9 @@ $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 echo $httpCode . PHP_EOL . $response;
 ```
-</Tab>
 
-<Tab>
+#### Go 
+
 ```go
 package main
 
@@ -257,9 +246,9 @@ func main() {
   fmt.Println("Status:", resp.Status)
 }
 ```
-</Tab>
 
-<Tab>
+#### Rust 
+
 ```rust
 use reqwest::blocking::Client;
 use serde_json::json;
@@ -285,12 +274,3 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 ```
-</Tab>
-
-<Tab>
-```bash
-curl -s -X POST "$BASE/api/v1/guard"   -H "Authorization: Bearer $TOKEN"   -H "Content-Type: application/json"   -d '{"messages":[{"role":"user","content":"Hello! Tell me about Ρhοenιx (Arizona)."}],"payload":true,"breakdown":true,"dev_info":true}'
-```
-</Tab>
-
-</Tabs>
