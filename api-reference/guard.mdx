@@ -49,9 +49,248 @@ description: "Scan prompts or model outputs for risky patterns."
 
 ### Examples
 
-```bash
-curl -s -X POST "$BASE/api/v1/guard"   -H "Authorization: Bearer $TOKEN"   -H "Content-Type: application/json"   -d '{
-    "messages": [{ "role": "user", "content": "Tell me about Ρhοenιx" }],
-    "payload": true
-  }'
+<Tabs items={['Python','JavaScript','TypeScript','Java','C#','.NET','C++','PHP','Go','Rust','cURL']}>
+
+<Tab>
+```python
+import requests
+
+BASE = "http://sagexai.test"
+TOKEN = "<YOUR_TOKEN>"
+
+headers = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"}
+body = {
+  "messages":[{"role":"user","content":"Hello! Tell me about Ρhοenιx (Arizona)."}],
+  "payload": True, "breakdown": True, "dev_info": True
+}
+resp = requests.post(f"{BASE}/api/v1/guard", headers=headers, json=body, timeout=30)
+print(resp.status_code, resp.json())
 ```
+</Tab>
+
+<Tab>
+```js
+const BASE = "http://sagexai.test";
+const TOKEN = "<YOUR_TOKEN>";
+
+const res = await fetch(`${BASE}/api/v1/guard`, {
+  method: "POST",
+  headers: { "Authorization": `Bearer ${TOKEN}`, "Content-Type": "application/json" },
+  body: JSON.stringify({
+    messages: [{ role: "user", content: "Hello! Tell me about Ρhοenιx (Arizona)." }],
+    payload: true, breakdown: true, dev_info: true
+  })
+});
+console.log(res.status, await res.json());
+```
+</Tab>
+
+<Tab>
+```ts
+const BASE = "http://sagexai.test";
+const TOKEN = "<YOUR_TOKEN>";
+
+interface Message { role: "user" | "system" | "assistant"; content: string; }
+const body = {
+  messages: [{ role: "user", content: "Hello! Tell me about Ρhοenιx (Arizona)." }],
+  payload: true, breakdown: true, dev_info: true
+};
+
+const res = await fetch(`${BASE}/api/v1/guard`, {
+  method: "POST",
+  headers: { "Authorization": `Bearer ${TOKEN}`, "Content-Type": "application/json" },
+  body: JSON.stringify(body)
+});
+console.log(res.status, await res.json());
+```
+</Tab>
+
+<Tab>
+```java
+import java.net.http.*;
+import java.net.URI;
+import java.time.Duration;
+
+public class GuardExample {
+  public static void main(String[] args) throws Exception {
+    String BASE = "http://sagexai.test";
+    String TOKEN = "<YOUR_TOKEN>";
+    String json = "{\"messages\":[{\"role\":\"user\",\"content\":\"Hello! Tell me about Ρhοenιx (Arizona).\"}],\"payload\":true,\"breakdown\":true,\"dev_info\":true}";
+    HttpClient client = HttpClient.newHttpClient();
+    HttpRequest req = HttpRequest.newBuilder()
+      .uri(URI.create(BASE + "/api/v1/guard"))
+      .timeout(Duration.ofSeconds(30))
+      .header("Authorization", "Bearer " + TOKEN)
+      .header("Content-Type", "application/json")
+      .POST(HttpRequest.BodyPublishers.ofString(json))
+      .build();
+    HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+    System.out.println(res.statusCode());
+    System.out.println(res.body());
+  }
+}
+```
+</Tab>
+
+<Tab>
+```csharp
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+
+var BASE = "http://sagexai.test";
+var TOKEN = "<YOUR_TOKEN>";
+
+using var client = new HttpClient();
+client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TOKEN);
+
+var json = "{"messages":[{"role":"user","content":"Hello! Tell me about Ρhοenιx (Arizona)."}],"payload":true,"breakdown":true,"dev_info":true}";
+var resp = await client.PostAsync($"{BASE}/api/v1/guard", new StringContent(json, Encoding.UTF8, "application/json"));
+Console.WriteLine((int)resp.StatusCode);
+Console.WriteLine(await resp.Content.ReadAsStringAsync());
+```
+</Tab>
+
+<Tab>
+```csharp
+// .NET HttpClientFactory (DI)
+// services.AddHttpClient("sagexai", c => {
+//   c.BaseAddress = new Uri("http://sagexai.test");
+//   c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "<YOUR_TOKEN>");
+// });
+```
+</Tab>
+
+<Tab>
+```cpp
+#include <curl/curl.h>
+#include <iostream>
+#include <string>
+
+int main() {
+  CURL* curl = curl_easy_init();
+  if (!curl) return 1;
+
+  const char* BASE = "http://sagexai.test";
+  const char* TOKEN = "<YOUR_TOKEN>";
+
+  std::string url = std::string(BASE) + "/api/v1/guard";
+  std::string payload = R"({"messages":[{"role":"user","content":"Hello! Tell me about Ρhοenιx (Arizona)."}],"payload":true,"breakdown":true,"dev_info":true})";
+
+  struct curl_slist* headers = NULL;
+  headers = curl_slist_append(headers, ("Authorization: Bearer " + std::string(TOKEN)).c_str());
+  headers = curl_slist_append(headers, "Content-Type: application/json");
+
+  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
+
+  CURLcode res = curl_easy_perform(curl);
+  if (res != CURLE_OK) std::cerr << "curl error: " << curl_easy_strerror(res) << "\n";
+
+  curl_slist_free_all(headers);
+  curl_easy_cleanup(curl);
+  return 0;
+}
+```
+</Tab>
+
+<Tab>
+```php
+<?php
+$BASE = "http://sagexai.test";
+$TOKEN = "<YOUR_TOKEN>";
+
+$ch = curl_init("$BASE/api/v1/guard");
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  "Authorization: Bearer $TOKEN",
+  "Content-Type: application/json"
+]);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$body = json_encode([
+  "messages" => [["role" => "user", "content" => "Hello! Tell me about Ρhοenιx (Arizona)."]],
+  "payload" => true, "breakdown" => true, "dev_info" => true
+]);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+echo $httpCode . PHP_EOL . $response;
+```
+</Tab>
+
+<Tab>
+```go
+package main
+
+import (
+  "bytes"
+  "encoding/json"
+  "fmt"
+  "net/http"
+  "time"
+)
+
+func main() {
+  base := "http://sagexai.test"
+  token := "<YOUR_TOKEN>"
+
+  body := map[string]interface{}{
+    "messages": []map[string]string{
+      {"role":"user","content":"Hello! Tell me about Ρhοenιx (Arizona)."},
+    },
+    "payload": true, "breakdown": true, "dev_info": true,
+  }
+  b, _ := json.Marshal(body)
+
+  req, _ := http.NewRequest("POST", base+"/api/v1/guard", bytes.NewBuffer(b))
+  req.Header.Set("Authorization", "Bearer "+token)
+  req.Header.Set("Content-Type", "application/json")
+
+  client := &http.Client{ Timeout: 30 * time.Second }
+  resp, err := client.Do(req)
+  if err != nil { panic(err) }
+  defer resp.Body.Close()
+
+  fmt.Println("Status:", resp.Status)
+}
+```
+</Tab>
+
+<Tab>
+```rust
+use reqwest::blocking::Client;
+use serde_json::json;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let base = "http://sagexai.test";
+    let token = "<YOUR_TOKEN>";
+    let client = Client::new();
+
+    let body = json!({
+        "messages": [{"role":"user","content":"Hello! Tell me about Ρhοenιx (Arizona)."}],
+        "payload": true, "breakdown": true, "dev_info": true
+    });
+
+    let res = client
+        .post(format!("{}/api/v1/guard", base))
+        .bearer_auth(token)
+        .json(&body)
+        .send()?;
+
+    println!("Status: {}", res.status());
+    println!("{}", res.text()?);
+    Ok(())
+}
+```
+</Tab>
+
+<Tab>
+```bash
+curl -s -X POST "$BASE/api/v1/guard"   -H "Authorization: Bearer $TOKEN"   -H "Content-Type: application/json"   -d '{"messages":[{"role":"user","content":"Hello! Tell me about Ρhοenιx (Arizona)."}],"payload":true,"breakdown":true,"dev_info":true}'
+```
+</Tab>
+
+</Tabs>
