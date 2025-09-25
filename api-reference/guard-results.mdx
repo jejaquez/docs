@@ -29,14 +29,14 @@ Use this to build dashboards and analytics. Results can be filtered by `project_
 }
 ```
 
-### Multi-Language Examples
+### Examples
 
 #### Python 
 
 ```python
 import requests
 
-BASE = "http://sagexai.test"
+BASE = "https://sagexai.com"
 TOKEN = "<YOUR_TOKEN>"
 params = {"project_id": "demo", "per_page": 25}
 
@@ -48,7 +48,7 @@ print(r.status_code, r.json())
 #### JavaScript
 
 ```js
-const BASE = "http://sagexai.test";
+const BASE = "https://sagexai.com";
 const TOKEN = "<YOUR_TOKEN>";
 const url = new URL(`${BASE}/api/v1/guard/results`);
 url.searchParams.set("project_id", "demo");
@@ -60,7 +60,7 @@ console.log(res.status, await res.json());
 #### TypeScript
 
 ```ts
-const BASE = "http://sagexai.test";
+const BASE = "https://sagexai.com";
 const TOKEN = "<YOUR_TOKEN>";
 const url = new URL(`${BASE}/api/v1/guard/results`);
 url.searchParams.set("project_id", "demo");
@@ -78,7 +78,7 @@ import java.net.URI;
 
 public class ResultsExample {
   public static void main(String[] args) throws Exception {
-    String BASE = "http://sagexai.test";
+    String BASE = "https://sagexai.com";
     String TOKEN = "<YOUR_TOKEN>";
     String url = BASE + "/api/v1/guard/results";
     HttpClient client = HttpClient.newHttpClient();
@@ -99,7 +99,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-var BASE = "http://sagexai.test";
+var BASE = "https://sagexai.com";
 var TOKEN = "<YOUR_TOKEN>";
 var url = $"{BASE}/api/v1/guard/results";
 
@@ -120,7 +120,7 @@ int main() {
   CURL* curl = curl_easy_init();
   if(!curl) return 1;
 
-  const char* BASE = "http://sagexai.test";
+  const char* BASE = "https://sagexai.com";
   const char* TOKEN = "<YOUR_TOKEN>";
   std::string url = std::string(BASE) + "/api/v1/guard/results";
 
@@ -143,7 +143,7 @@ int main() {
 
 ```php
 <?php
-$BASE = "http://sagexai.test";
+$BASE = "https://sagexai.com";
 $TOKEN = "<YOUR_TOKEN>";
 $url = "$BASE/api/v1/guard/results";
 
@@ -168,7 +168,7 @@ import (
 )
 
 func main() {
-  base := "http://sagexai.test";
+  base := "https://sagexai.com";
   token := "<YOUR_TOKEN>";
   url := base + "/api/v1/guard/results";
 
@@ -190,7 +190,7 @@ func main() {
 use reqwest::blocking::Client;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let base = "http://sagexai.test";
+    let base = "https://sagexai.com";
     let token = "<YOUR_TOKEN>";
     let url = format!("{}/api/v1/guard/results", base);
     let res = Client::new()

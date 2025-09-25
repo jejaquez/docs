@@ -47,14 +47,26 @@ description: "Scan prompts or model outputs for risky patterns."
 }
 ```
 
-### Multi-Language Examples
+### cURL
 
-#### Python 
+```bash
+curl -X POST https://sagexai.com/api/v1/guard \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [{"role":"user","content":"Hello! Tell me about Ρhοenιx (Arizona)."}],
+    "payload": true,
+    "breakdown": true,
+    "dev_info": true
+  }'
+```
+
+### Python 
 
 ```python
 import requests
 
-BASE = "http://sagexai.test"
+BASE = "https://sagexai.com"
 TOKEN = "<YOUR_TOKEN>"
 
 headers = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"}
@@ -66,10 +78,10 @@ resp = requests.post(f"{BASE}/api/v1/guard", headers=headers, json=body, timeout
 print(resp.status_code, resp.json())
 ```
 
-#### JavaScript
+### JavaScript
 
 ```js
-const BASE = "http://sagexai.test";
+const BASE = "https://sagexai.com";
 const TOKEN = "<YOUR_TOKEN>";
 
 const res = await fetch(`${BASE}/api/v1/guard`, {
@@ -83,10 +95,10 @@ const res = await fetch(`${BASE}/api/v1/guard`, {
 console.log(res.status, await res.json());
 ```
 
-#### TypeScript 
+### TypeScript 
 
 ```ts
-const BASE = "http://sagexai.test";
+const BASE = "https://sagexai.com";
 const TOKEN = "<YOUR_TOKEN>";
 
 interface Message { role: "user" | "system" | "assistant"; content: string; }
@@ -103,7 +115,7 @@ const res = await fetch(`${BASE}/api/v1/guard`, {
 console.log(res.status, await res.json());
 ```
 
-#### Java 
+### Java 
 
 ```java
 import java.net.http.*;
@@ -112,7 +124,7 @@ import java.time.Duration;
 
 public class GuardExample {
   public static void main(String[] args) throws Exception {
-    String BASE = "http://sagexai.test";
+    String BASE = "https://sagexai.com";
     String TOKEN = "<YOUR_TOKEN>";
     String json = "{\"messages\":[{\"role\":\"user\",\"content\":\"Hello! Tell me about Ρhοenιx (Arizona).\"}],\"payload\":true,\"breakdown\":true,\"dev_info\":true}";
     HttpClient client = HttpClient.newHttpClient();
@@ -130,7 +142,7 @@ public class GuardExample {
 }
 ```
 
-#### C# 
+### C# 
 
 ```csharp
 using System;
@@ -138,7 +150,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-var BASE = "http://sagexai.test";
+var BASE = "https://sagexai.com";
 var TOKEN = "<YOUR_TOKEN>";
 
 using var client = new HttpClient();
@@ -150,7 +162,7 @@ Console.WriteLine((int)resp.StatusCode);
 Console.WriteLine(await resp.Content.ReadAsStringAsync());
 ```
 
-#### C++
+### C++
 
 ```cpp
 #include <curl/curl.h>
@@ -161,7 +173,7 @@ int main() {
   CURL* curl = curl_easy_init();
   if (!curl) return 1;
 
-  const char* BASE = "http://sagexai.test";
+  const char* BASE = "https://sagexai.com";
   const char* TOKEN = "<YOUR_TOKEN>";
 
   std::string url = std::string(BASE) + "/api/v1/guard";
@@ -184,11 +196,11 @@ int main() {
 }
 ```
 
-#### PHP 
+### PHP 
 
 ```php
 <?php
-$BASE = "http://sagexai.test";
+$BASE = "https://sagexai.com";
 $TOKEN = "<YOUR_TOKEN>";
 
 $ch = curl_init("$BASE/api/v1/guard");
@@ -209,7 +221,7 @@ curl_close($ch);
 echo $httpCode . PHP_EOL . $response;
 ```
 
-#### Go 
+### Go 
 
 ```go
 package main
@@ -223,7 +235,7 @@ import (
 )
 
 func main() {
-  base := "http://sagexai.test"
+  base := "https://sagexai.com"
   token := "<YOUR_TOKEN>"
 
   body := map[string]interface{}{
@@ -247,14 +259,14 @@ func main() {
 }
 ```
 
-#### Rust 
+### Rust 
 
 ```rust
 use reqwest::blocking::Client;
 use serde_json::json;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let base = "http://sagexai.test";
+    let base = "https://sagexai.com";
     let token = "<YOUR_TOKEN>";
     let client = Client::new();
 

@@ -57,7 +57,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://sagexai-main-fuzqn8.laravel.cloud/login"
     }
   },
   "contextual": {
