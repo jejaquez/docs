@@ -28,16 +28,16 @@
         "tab": "API reference",
         "groups": [
           {
+            "group": "Introduction",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
             "group": "Guard endpoints",
             "pages": [
               "api-reference/guard",
               "api-reference/guard-results"
-            ]
-          },
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
             ]
           }
         ]
