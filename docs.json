@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "SageXAI Docs",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#4240db",
+    "light": "#6e6dc9",
+    "dark": "#615FFF"
   },
   "favicon": "/favicon.svg",
   "navigation": {
