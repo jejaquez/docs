@@ -11,6 +11,6 @@
   <g class="brand">
     <!-- Sparkles (left) -->
     <!-- 16px visual gap to wordmark -->
-    <text class="wordmark" x="86" y="60" fill="currentColor">SageXAI</text>
+    <text class="wordmark" x="0" y="60" fill="currentColor">SageXAI</text>
   </g>
 </svg>
