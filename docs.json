@@ -19,7 +19,8 @@
               "index",
               "quickstart",
               "guides/authentication",
-              "guides/blocking"
+              "guides/blocking",
+              "guides/kubernetes"
             ]
           }
         ]
