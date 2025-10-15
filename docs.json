@@ -37,7 +37,8 @@
             "group": "Guard endpoints",
             "pages": [
               "api-reference/guard",
-              "api-reference/guard-results"
+              "api-reference/guard-results",
+              "api-reference/policies"
             ]
           }
         ]

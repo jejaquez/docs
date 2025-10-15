@@ -1,0 +1,190 @@
+---
+title: "/policies"
+description: "List the active policies available to your API token."
+---
+
+**Endpoint**: `GET /api/v1/policies`
+
+**Purpose**: Return the set of **enabled** policies for the authenticated user. 
+
+Each entry is grouped by a policy `code` and includes the display `name`, an `enabled` flag, and a short `policy_name` identifier.
+
+### Request
+
+_No body required._
+
+**Headers**
+- `Authorization: Bearer <API_TOKEN>`
+
+**Query params**
+- *(none)*
+
+**Notes**
+- Keys in the `policy` object are the **policy codes** (e.g., `LLM01__...`).
+
+### Response
+
+```json
+{
+  "policy": {
+    "LLM01__automotive_/_mobility_/_telematics": {
+      "name": "Prompt Injection",
+      "enabled": true,
+      "policy_name": "MyCarApp"
+    },
+    "LLM02__content_/_text_/_language": {
+      "name": "Sensitive Information Disclosure",
+      "enabled": true,
+      "policy_name": "MyLLM"
+    }
+  }
+}
+```
+
+**Field meanings**
+- `policy` — object keyed by **policy code**.
+  - `name` — human‑readable policy name (e.g., “Prompt Injection”).
+  - `enabled` — whether this policy is active for your tenant.
+  - `policy_name` — short identifier/alias you may surface in UIs or logs.
+
+### cURL
+
+```bash
+curl --request GET \
+  --url http://sagexai.com/api/v1/policies \
+  --header 'Authorization: <API_TOKEN>'
+```
+
+### Python
+
+```python
+import requests
+
+BASE = "http://sagexai.com"
+TOKEN = "<API_TOKEN>"
+
+res = requests.get(f"{BASE}/api/v1/policies",
+                   headers={"Authorization": f"Bearer {TOKEN}"},
+                   timeout=15)
+print(res.status_code, res.json())
+```
+
+### JavaScript
+
+```js
+const BASE = "http://sagexai.com";
+const TOKEN = "<API_TOKEN>";
+
+const res = await fetch(`${BASE}/api/v1/policies`, {
+  headers: { Authorization: `Bearer ${TOKEN}` }
+});
+console.log(res.status, await res.json());
+```
+
+### TypeScript
+
+```ts
+const BASE = "http://sagexai.com";
+const TOKEN = "<API_TOKEN>";
+
+type PolicyEntry = { name: string; enabled: boolean; policy_name: string };
+type PoliciesResponse = { policy: Record<string, PolicyEntry> };
+
+const res = await fetch(`${BASE}/api/v1/policies`, {
+  headers: { Authorization: `Bearer ${TOKEN}` },
+});
+const data: PoliciesResponse = await res.json();
+console.log(res.status, data);
+```
+
+### Java
+
+```java
+import java.net.http.*;
+import java.net.URI;
+class PoliciesExample {
+  public static void main(String[] args) throws Exception {
+    var client = HttpClient.newHttpClient();
+    var req = HttpRequest.newBuilder()
+      .uri(URI.create("http://sagexai.com/api/v1/policies"))
+      .header("Authorization", "Bearer <API_TOKEN>")
+      .GET().build();
+    var res = client.send(req, HttpResponse.BodyHandlers.ofString());
+    System.out.println(res.statusCode());
+    System.out.println(res.body());
+  }
+}
+```
+
+### C#
+
+```csharp
+using System.Net.Http;
+using System.Net.Http.Headers;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "<API_TOKEN>");
+var res = await client.GetAsync("http://sagexai.com/api/v1/policies");
+Console.WriteLine((int)res.StatusCode);
+Console.WriteLine(await res.Content.ReadAsStringAsync());
+```
+
+### PHP
+
+```php
+<?php
+$ch = curl_init("http://sagexai.com/api/v1/policies");
+curl_setopt_array($ch, [
+  CURLOPT_HTTPHEADER => ["Authorization: Bearer <API_TOKEN>"],
+  CURLOPT_RETURNTRANSFER => true,
+]);
+$body = curl_exec($ch);
+$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+echo $code . PHP_EOL . $body;
+```
+
+### Go
+
+```go
+package main
+import ("fmt"; "net/http"; "io"; "log")
+func main() {
+  req, _ := http.NewRequest("GET", "http://sagexai.com/api/v1/policies", nil)
+  req.Header.Set("Authorization", "Bearer <API_TOKEN>")
+  resp, err := http.DefaultClient.Do(req)
+  if err != nil { log.Fatal(err) }
+  defer resp.Body.Close()
+  b, _ := io.ReadAll(resp.Body)
+  fmt.Println(resp.Status)
+  fmt.Println(string(b))
+}
+```
+
+### Rust
+
+```rust
+use reqwest::blocking::Client;
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let c = Client::new();
+    let res = c.get("http://sagexai.com/api/v1/policies")
+        .bearer_auth("<API_TOKEN>")
+        .send()?;
+    println!("Status: {}", res.status());
+    println!("{}", res.text()?);
+    Ok(())
+}
+```
+
+### HTTP Status Codes
+
+- `200 OK` — policies returned successfully
+- `401 Unauthorized` — missing/invalid `Authorization` bearer token
+- `429 Too Many Requests` — (if rate‑limit enabled)
+- `5xx` — server error
+
+### Troubleshooting
+
+- **Empty set** — ensure your token belongs to a user with enabled policies.
+- **401** — verify the bearer token and that it hasn’t expired/revoked.
+- **Different base URL** — in production use `https://sagexai.com` instead of `http://sagexai.com`.
