@@ -40,6 +40,12 @@
               "api-reference/guard-results",
               "api-reference/policies"
             ]
+          },
+          {
+            "group": "MCP server",
+            "pages": [
+              "api-reference/mcp-guard"
+            ]
           }
         ]
       }

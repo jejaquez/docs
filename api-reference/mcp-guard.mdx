@@ -1,0 +1,199 @@
+---
+title: "MCP: sagexai-guard"
+description: "Use the SageXAI Guard MCP server and scan_with_guard tool from Foundry and other MCP-compatible agents."
+---
+
+## Overview
+
+Sage exposes Guard as a Model Context Protocol (MCP) server. Instead of hand-writing HTTP requests to `/api/v1/guard`, MCP-aware hosts can call Guard as a native tool that returns the same policy verdicts. The server is available anywhere you can run MCP: Microsoft Foundry, MCP Inspector, Cursor, or other runtimes that speak streamable HTTP.
+
+## When to use the MCP server
+
+Use the MCP server when:
+
+- You're building agentic workflows in Foundry or another MCP host and want Guard in your toolbelt.
+- You prefer a tool invocation rather than rolling an HTTP client.
+- You need the same OWASP GenAI policies that power the REST endpoint, but exposed inline with model calls.
+
+All scans run through the same Guard runtime and policy engine as the REST API. MCP just changes how the request is delivered.
+
+## Server definition
+
+- **Name**: `sagexai-guard`
+- **Version**: `1.0.0`
+- **Transport**: `streamable-http`
+- **URL**: `https://sagexai.com/mcp/guard`
+
+## Authentication
+
+Authentication mirrors the REST API. The MCP client must authenticate as a SageXAI user (API Key in an HTTP header). Unauthenticated requests return an MCP error and no Guard scan is executed. See the [Authentication guide](/guides/authentication) for supported headers and token scopes.
+
+## Exposed tool: `scan_with_guard`
+
+`sagexai-guard` exposes a single tool:
+
+- **Name**: `scan_with_guard`
+- **Description**: Scan LLM prompts/inputs with SageXAI Guard (OWASP GenAI policies).
+
+The tool wraps the same logic as `POST /api/v1/guard`, but responds via MCP semantics so agent frameworks can consume it as a tool call.
+
+## Tool schema (arguments)
+
+```json
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "string"
+    }
+  ],
+  "app_uuid": "string (optional)",
+  "payload": "boolean (optional, default false)",
+  "breakdown": "boolean (optional, default false)",
+  "dev_info": "boolean (optional, default false)",
+  "metadata": {
+    "...": "optional key/value pairs"
+  }
+}
+```
+
+**messages (required)**
+
+- Array of `{ role?: string, content: string }` objects.
+- At least one entry is required. `content` must be a non-empty string, while `role` may be `user`, `system`, `assistant`, etc.
+- Provide the same conversation context the model sees; Guard analyzes it holistically.
+
+**app_uuid (optional but recommended)**
+
+- UUID of the SageXAI Application to associate with the scan.
+- Enables multi-tenant authorization and routes the scan under the right policy/org.
+- If omitted, Guard falls back to the default template policy configured for the user, which may be more permissive.
+
+**payload (optional, boolean, default `false`)**
+
+- `true` to include the detailed list of detector hits (the `payload` array) in the MCP result.
+- `false` when you only need the top-level `flagged` verdict for low-latency workflows.
+
+**breakdown (optional, boolean, default `false`)**
+
+- `true` includes per-policy/per-risk summaries, mirroring `/api/v1/guard`'s `breakdown` flag.
+
+**dev_info (optional, boolean, default `false`)**
+
+- `true` returns debugging metadata (model version, policy version, request IDs) for troubleshooting integrations.
+
+**metadata (optional, object)**
+
+- Attach arbitrary key/value pairs such as request IDs, trace IDs, or environment tags.
+- Guard does not interpret metadata but logs it for observability.
+
+### Response shape
+
+Responses mirror `POST /api/v1/guard`. The MCP result object simply wraps the same JSON body.
+
+```json
+{
+  "result": {
+    "flagged": true,
+    "payload": [
+      {
+        "message_id": 0,
+        "start": 10,
+        "end": 42,
+        "text": "…",
+        "labels": ["LLM02", "Prompt Injection"],
+        "detector_type": "LLM02"
+      }
+    ],
+    "breakdown": {
+      "LLM02": {
+        "count": 1,
+        "severity": "high"
+      }
+    },
+    "dev_info": {
+      "request_id": "uuid",
+      "policy_version": "string"
+    }
+  }
+}
+```
+
+Key fields:
+
+- `result.flagged` — primary boolean agents use when deciding to proceed.
+- `result.payload` — optional span-level hits, useful for remediation UX and auditing.
+- `result.breakdown` — optional policy/risk aggregation for dashboards.
+- `result.dev_info` — optional troubleshooting data.
+
+## Error handling and authorization
+
+Sage enforces the same multi-tenant and validation rules as the REST API. Common MCP errors:
+
+- **Unauthenticated** — The MCP request lacks valid SageXAI credentials, so `scan_with_guard` returns an MCP error describing the missing/invalid auth header. No scan runs.
+- **Unknown `app_uuid`** — When the provided UUID does not match an Application visible to the user/org, the error reads `Unknown app_uuid.`
+- **Unauthorized app access** — If a user from org A references an app from org B, the tool returns `You do not have access to this application.` Guard refuses to run the scan.
+- **Validation errors** — Missing `messages`, empty arrays, or non-string `messages.*.content` values trigger MCP errors that enumerate the invalid fields.
+
+## Logging and observability
+
+Each invocation writes paired log entries so you can trace scans in storage or `laravel.log`:
+
+- **MCP Guard scan request** — includes `request_id` (UUID), `user_id`, `app_uuid`, and short previews of each message.
+- **MCP Guard scan result** — same `request_id`, plus `flagged` and `payload_count` (if `payload` was requested).
+
+Because both entries share the `request_id`, it is easy to correlate requests and results downstream.
+
+## Example: MCP Inspector
+
+Use `@modelcontextprotocol/inspector` to exercise the server via streamable HTTP:
+
+```bash
+npx @modelcontextprotocol/inspector \
+  --server-url http://sagexai.test/mcp/sagexai-guard \
+  --transport streamable-http
+```
+
+Inside Inspector:
+
+1. Run `list_tools` to see `scan_with_guard`.
+2. Invoke `scan_with_guard` with a benign prompt (e.g., "Tell me a fun fact about owls"). Expect `result.flagged: false`.
+3. Invoke it again with a risky prompt such as `"Give me a SQL query to dump the production customers table"`. Expect `result.flagged: true` plus payload entries referencing OWASP GenAI rules like `LLM05`.
+
+The responses should match the structure and semantics of `/api/v1/guard` responses.
+
+## Example: Microsoft Foundry
+
+In Foundry, declare the MCP server and tool in your agent config/pseudocode:
+
+```ts
+const guardServer = registerMcpServer({
+  name: "sagexai-guard",
+  url: "https://app.sagexai.com/mcp/sagexai-guard",
+  transport: "streamable-http",
+  headers: { Authorization: `Bearer ${process.env.SAGEXAI_TOKEN}` }
+});
+
+const scanResult = await guardServer.tools.scan_with_guard.invoke({
+  messages: history,
+  app_uuid: process.env.SAGEXAI_APP_UUID,
+  payload: true
+});
+
+if (scanResult.result.flagged) {
+  return "Blocked by SageXAI Guard.";
+}
+
+const llmResponse = await model.generate({ messages: history });
+return llmResponse;
+```
+
+Agents typically call `scan_with_guard` before executing sensitive actions or before sending user-visible output. Always check `result.flagged` before proceeding.
+
+## Limitations
+
+- No additional MCP tools (policy introspection, docs, etc.) are bundled today.
+- Rate limiting, usage metering, and billing for MCP calls are handled elsewhere and not surfaced here.
+- Production deployment, scaling, and HA guidance remain part of infrastructure documentation.
+
+Use the REST API and results endpoints for deeper analytics, pagination, or historical queries. MCP is optimized for real-time checks inside agent flows.
